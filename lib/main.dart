@@ -42,39 +42,60 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("pushed"),
-            BlocBuilder<CounterCubit,CounterState>(
-              builder: (context, state) {
-                if(state.counterValue<0){
-                  return Text("Ahmmm"+state.counterValue.toString());
-                }
-                return Text(state.counterValue.toString());
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body:  Center(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FloatingActionButton(onPressed: () {
-                  BlocProvider.of<CounterCubit>(context).decrement();
-                },
-                  tooltip: "Decrement",
-                  child: const Icon(Icons.remove),
-                ),
-                FloatingActionButton(onPressed: () {
-                  BlocProvider.of<CounterCubit>(context).increment();
-                },
-                  tooltip: "Increment",
-                  child: const Icon(Icons.add),),
+                const Text("You have pushed the button this many times"),
+                BlocConsumer<CounterCubit, CounterState>(
+                  listener: (context, state) {
+                    if(state.wasIncremented){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Incremented!"),
+                        duration: Duration(milliseconds: 300),
+                      ));
 
+                    }
+                    else if(!state.wasIncremented){
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Decremented!"),
+                        duration: Duration(milliseconds: 300),
+                      ));
+
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.counterValue < 0) {
+                      return Text("Ahmmm" + state.counterValue.toString());
+                    }
+                    return Text(state.counterValue.toString());
+                  },
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    FloatingActionButton(onPressed: () {
+                      BlocProvider.of<CounterCubit>(context).decrement();
+                    },
+                      tooltip: "Decrement",
+                      child: const Icon(Icons.remove),
+                    ),
+                    FloatingActionButton(onPressed: () {
+                      BlocProvider.of<CounterCubit>(context).increment();
+                    },
+                      tooltip: "Increment",
+                      child: const Icon(Icons.add),),
+
+                  ],
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
-      ),
 
     );
   }
